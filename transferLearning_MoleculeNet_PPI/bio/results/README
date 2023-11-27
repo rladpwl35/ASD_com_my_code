@@ -1,0 +1,4 @@
+feature 는 roi로 한 것을 사용(coordinate보다 roi가 잘나옴)
+./roi 경로에 있는 결과들 최종적으로 report 예정
+
+new_roi는 새로 pcc 구한 값(pingouin툴의 함수로 구한 값)으로 처리 한것 

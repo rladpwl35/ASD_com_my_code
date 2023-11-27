@@ -1,0 +1,17 @@
+*.res
+*.png
+*.pth
+*.txt
+*.pt
+*.pkl
+*.csv
+
+transferLearning_MoleculeNet_PPI_LP/
+transferLearning_MoleculeNet_PPI_LP/bio/result/
+transferLearning_MoleculeNet_PPI_LP/bio/weight/
+transferLearning_MoleculeNet_PPI/chem/
+mygraphcl/
+ASD_data/temp/
+transferLearning_MoleculeNet_PPI/bio/dataset/
+transferLearning_MoleculeNet_PPI/bio/data/
+transferLearning_MoleculeNet_PPI/bio/bio_dataset.zip

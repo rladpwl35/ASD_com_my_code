@@ -1,0 +1,12 @@
+edge10/gin_0.001_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge10/gin_0.01_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge10/gin_0.1_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge10/gin_1.0_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge15/gin_0.001_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge15/gin_0.01_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge15/gin_0.1_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge15/gin_1.0_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge5/gin_0.001_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge5/gin_0.01_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge5/gin_0.1_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res
+edge5/gin_1.0_lr1e-4_evaltrain1_split311_epoch300_batch100_s_decay0.01.res

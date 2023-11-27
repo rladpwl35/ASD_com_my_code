@@ -1,0 +1,5 @@
+sh my_finetune.sh weights/layer1/joao_0.1_gcn_batch256_spars20_unsupervis_100emb128.pth 0.0001 ABDIE1_ASD_con_5fold/edge20/gcn_0.1_lr1e-4_evaltrain1_split311_epoch300_batch800_s_decay0_layer1_10fold_dim128_fc100 4 800 300 dataset/spars20_supervised/abide_asd_cn/processed/geometric_data_processed.pt 0 gcn 10 1 128
+
+sh my_finetune.sh weights/layer2/joao_0.1_gcn_batch256_spars20_unsupervis_100emb128.pth 0.0001 ABDIE1_ASD_con_5fold/edge20/gcn_0.1_lr1e-4_evaltrain1_split311_epoch300_batch800_s_decay0_layer2_10fold_dim128_fc100 4 800 300 dataset/spars20_supervised/abide_asd_cn/processed/geometric_data_processed.pt 0 gcn 10 2 128
+
+sh my_finetune.sh weights/layer3/joao_0.1_gcn_batch256_spars20_unsupervis_100emb128.pth 0.0001 ABDIE1_ASD_con_5fold/edge20/gcn_0.1_lr1e-4_evaltrain1_split311_epoch300_batch800_s_decay0_layer3_10fold_dim128_fc100 4 800 300 dataset/spars20_supervised/abide_asd_cn/processed/geometric_data_processed.pt 0 gcn 10 3 128
