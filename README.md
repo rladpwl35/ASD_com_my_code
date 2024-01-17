@@ -1,3 +1,3 @@
-![](./fMRI_prep.png
+![](./fMRI_prep.png)
 
 ![](./model_framework.png)
