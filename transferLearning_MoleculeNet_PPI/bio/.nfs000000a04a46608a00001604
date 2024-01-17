@@ -1,9 +1,0 @@
-sh pretrain_select_aug_manually.sh 5 gat spars20_unsupervised/processed/only_cc 128 2 0.001 
-
-sh pretrain_select_aug_manually1.sh 5 gat spars20_unsupervised/processed/only_cc 128 2 0.001 
-
-sh pretrain_select_aug_manually2.sh 5 gat spars20_unsupervised/processed/only_cc 128 2 0.001 
-
-sh pretrain_select_aug_manually3.sh 5 gat spars20_unsupervised/processed/only_cc 128 2 0.001 
-
-sh pretrain_select_aug_manually4.sh 5 gat spars20_unsupervised/processed/only_cc 128 2 0.001 

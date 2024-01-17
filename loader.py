@@ -76,6 +76,7 @@ class BioDataset_graphcl(BioDataset):
                  augmentation1=0,
                  augmentation2=0,
                  augmentation3=0,
+                 augmentation4=0,
                  empty=False,
                  transform=None,
                  pre_transform=None,
@@ -87,6 +88,7 @@ class BioDataset_graphcl(BioDataset):
         self.augmentations = [self.node_drop, self.subgraph, self.edge_pert, self.attr_mask, lambda x:x]
         self.augmentations_v2 = [self.augmentations[augmentation1], self.augmentations[augmentation2], self.augmentations[augmentation3]]
         self.augmentations_v3 = [self.augmentations[augmentation1], self.augmentations[augmentation2]]
+        self.augmentations_v4 = [self.augmentations[augmentation1], self.augmentations[augmentation2], self.augmentations[augmentation3], self.augmentations[augmentation4]]
         super(BioDataset_graphcl, self).__init__(root, data_type, empty, transform, pre_transform, pre_filter)
 
     def set_aug(self, aug1, aug2):
@@ -221,6 +223,11 @@ class BioDataset_graphcl(BioDataset):
             n_aug1, n_aug2 = n_aug//2, n_aug%2
             data1 = self.augmentations_v3[n_aug1](data1)
             data2 = self.augmentations_v3[n_aug2](data2) 
+        elif self.aug_mode == 'sample_v4':
+            n_aug = np.random.choice(16, 1, p=self.aug_prob)[0]
+            n_aug1, n_aug2 = n_aug//4, n_aug%4
+            data1 = self.augmentations_v4[n_aug1](data1)
+            data2 = self.augmentations_v4[n_aug2](data2) 
 
         return data, data1, data2
 

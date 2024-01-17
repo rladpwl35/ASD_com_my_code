@@ -53,7 +53,7 @@ def confusion_matrix_scorer(clf, X, y):
 #---------------------------------------------------------
 if args.model == 'LR':
 
-    dataset = torch.load(f'./dataset/spars{args.edge}_supervised/only_cc/processed/geometric_data_processed.pt')
+    dataset = torch.load(f'./dataset/spars{args.edge}_supervised/only_cc_balanced/processed/geometric_data_processed.pt')
     edge5_X = []
     edge5_y = []
     for i in range(len(dataset)):
@@ -178,7 +178,7 @@ if args.model == 'LR':
 #       SVM
 #---------------------------------------------------------    
 if args.model == 'SVM':
-    dataset = torch.load(f'./dataset/spars{args.edge}_supervised/only_cc/processed/geometric_data_processed.pt')
+    dataset = torch.load(f'./dataset/spars{args.edge}_supervised/only_cc_balanced/processed/geometric_data_processed.pt')
     edge5_X = []
     edge5_y = []
     for i in range(len(dataset)):
@@ -321,7 +321,7 @@ if args.model == 'SVM':
 #---------------------------------------------------------        
         
 if args.model == 'MLP':
-    dataset = torch.load(f'./dataset/spars{args.edge}_supervised/only_cc/processed/geometric_data_processed.pt')
+    dataset = torch.load(f'./dataset/spars{args.edge}_supervised/only_cc_balanced/processed/geometric_data_processed.pt')
     edge5_X = []
     edge5_y = []
     for i in range(len(dataset)):

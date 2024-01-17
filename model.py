@@ -437,7 +437,7 @@ class GraphSAGEConv(MessagePassing):
         if self.input_layer: 
             # self.input_node_embeddings = torch.nn.Embedding(2, emb_dim)
             # torch.nn.init.xavier_uniform_(self.input_node_embeddings.weight.data)
-            self.linear1 = torch.nn.Linear(200,emb_dim)
+            self.linear1 = torch.nn.Linear(116,emb_dim)
             torch.nn.init.xavier_uniform_(self.linear1.weight.data)
 
         self.aggr = aggr

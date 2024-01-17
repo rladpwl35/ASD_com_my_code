@@ -1,5 +1,0 @@
-sh my_finetune.sh weights/only_cc/layer1/joao_0.1_gcn_batch256_ars20_unsupervi_100emb128.pth 0.0001 roi/only_cc/edge20/gcn_0.1weigedloss_lr1e-4_epoch300_batch400_decay0.0001_layer1_5fold_dim128_fc32 6 400 300 dataset/spars20_supervised/only_cc/processed/geometric_data_processed.pt 0.0001 gcn 5 1 128 no
-
-sh my_finetune.sh weights/only_cc/layer1/joao_0.1_gcn_batch256_ars20_unsupervi_100emb128.pth 0.0001 roi/only_cc/edge20/gcn_0.1weigedloss_lr1e-4_epoch300_batch400_decay0.0001_layer1_5fold_dim128_fc32 6 400 300 dataset/spars20_supervised/only_cc/processed/geometric_data_processed.pt 0.0001 gcn 5 1 128 no
-
-sh my_finetune.sh weights/only_cc/layer1/joao_0.1_gcn_batch256_ars20_unsupervi_100emb128.pth 0.0001 roi/only_cc/edge20/gcn_0.1weigedloss_lr1e-4_epoch300_batch400_decay0.0001_layer1_5fold_dim128_fc32 6 400 300 dataset/spars20_supervised/only_cc/processed/geometric_data_processed.pt 0.0001 gcn 5 1 128 no

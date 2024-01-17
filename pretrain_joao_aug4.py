@@ -28,11 +28,11 @@ def cycle_index(num, shift):
 
 #grapn CL 모델 
 class graphcl(nn.Module):
-    def __init__(self, gnn):
+    def __init__(self, gnn, emb_dim):
         super(graphcl, self).__init__()
         self.gnn = gnn
         self.pool = global_mean_pool
-        self.projection_head = nn.Sequential(nn.Linear(300, 300), nn.ReLU(inplace=True), nn.Linear(300, 300))
+        self.projection_head = nn.Sequential(nn.Linear(emb_dim, 300), nn.ReLU(inplace=True), nn.Linear(300, 300))
 
     def forward_cl(self, x, edge_index, edge_attr, batch):
         x = self.gnn(x, edge_index, edge_attr)
@@ -84,9 +84,9 @@ def train(args, loader, model, optimizer, device, gamma_joao):
 
     # joao
     aug_prob = loader.dataset.aug_prob
-    loss_aug = np.zeros(4)
-    for n in range(4):
-        _aug_prob = np.zeros(4)
+    loss_aug = np.zeros(16)
+    for n in range(16):
+        _aug_prob = np.zeros(16)
         _aug_prob[n] = 1
         loader.dataset.set_augProb(_aug_prob)
 
@@ -113,8 +113,8 @@ def train(args, loader, model, optimizer, device, gamma_joao):
     beta = 1
     gamma = gamma_joao
 
-    b = aug_prob + beta * (loss_aug - gamma * (aug_prob - 1/4))
-    mu_min, mu_max = b.min()-1/4, b.max()-1/4
+    b = aug_prob + beta * (loss_aug - gamma * (aug_prob - 1/16))
+    mu_min, mu_max = b.min()-1/16, b.max()-1/16
     mu = (mu_min + mu_max) / 2
 
     # bisection method
@@ -157,7 +157,7 @@ def main():
     parser.add_argument('--model_file', type = str, default = '', help='filename to output the pre-trained model')
     parser.add_argument('--seed', type=int, default=0, help = "Seed for splitting dataset.")
     parser.add_argument('--num_workers', type=int, default = 4, help='number of workers for dataset loading')
-    parser.add_argument('--aug_mode', type=str, default = 'sample_v2') 
+    parser.add_argument('--aug_mode', type=str, default = 'sample_v4') 
     parser.add_argument('--aug1', type=str, default = 0) 
     parser.add_argument('--aug2', type=str, default = 0)
     parser.add_argument('--aug_strength', type=float, default = 0.2)
@@ -165,6 +165,7 @@ def main():
     parser.add_argument('--augmentation1', type=int, default = 0)
     parser.add_argument('--augmentation2', type=int, default = 0)
     parser.add_argument('--augmentation3', type=int, default = 0)
+    parser.add_argument('--augmentation4', type=int, default = 0)
 
     parser.add_argument('--gamma', type=float, default = 0.1)
     args = parser.parse_args()
@@ -179,7 +180,7 @@ def main():
     #set up dataset
     root_unsupervised = 'dataset/' + args.root_unsupervised
     dataset = BioDataset_graphcl(root_unsupervised, data_type='unsupervised', augmentation1=args.augmentation1, \
-        augmentation2=args.augmentation2, augmentation3=args.augmentation3)
+        augmentation2=args.augmentation2, augmentation3=args.augmentation3, augmentation4=args.augmentation4)
     dataset.set_augMode(args.aug_mode)
     if args.aug_mode == 'none':
         dataset.set_aug(args.aug1, args.aug2)
@@ -192,14 +193,14 @@ def main():
 
     #set up model
     gnn = GNN(args.num_layer, args.emb_dim, JK = args.JK, drop_ratio = args.dropout_ratio, gnn_type = args.gnn_type)
-    model = graphcl(gnn)
+    model = graphcl(gnn, args.emb_dim)
     model.to(device)
 
     #set up optimizer
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.decay)
     print(optimizer)
 
-    aug_prob = np.ones(4) / 4
+    aug_prob = np.ones(16) / 16
     print(aug_prob)
     
     
@@ -213,41 +214,20 @@ def main():
         
         print(epoch, pretrain_loss, aug_prob)
         if epoch % 20 == 0:
-            if args.aug_mode == "sample_v2":    
-                if 'abide' in args.root_unsupervised:
-                    unsupervised_path = str(args.root_unsupervised).strip("/abide/")
-                    torch.save(model.gnn.state_dict(), "./weights/abide/aug3/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-                if 'Coordinate' in args.root_unsupervised:
-                    unsupervised_path = str(args.root_unsupervised).strip("/processed_ROICoordinate")
-                    torch.save(model.gnn.state_dict(), "./weights/aug3/coordinate/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-                else:
-                    #unsupervised_path = str(args.root_unsupervised).strip("/abide/")
-                    unsupervised_path=str(args.root_unsupervised)
-                    torch.save(model.gnn.state_dict(), "./weights/aug3/roi/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-            if args.aug_mode == 'none':
-                if 'abide' in args.root_unsupervised:
-                    unsupervised_path = str(args.root_unsupervised).strip("/abide/")
-                    torch.save(model.gnn.state_dict(), "./weights/manual/abide/joao_" + str(args.aug_mode)+ str(args.aug1)+str(args.aug2) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-                if 'Coordinate' in args.root_unsupervised:
-                    unsupervised_path = str(args.root_unsupervised).strip("/processed_ROICoordinate")
-                    torch.save(model.gnn.state_dict(), "./weights/manual/coordinate/joao_" + str(args.aug_mode)+ str(args.aug1)+str(args.aug2) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-            if args.aug_mode == "sample_v3": 
-                if 'abide' in args.root_unsupervised:
-                    unsupervised_path = str(args.root_unsupervised).strip("/abide/")
-                    torch.save(model.gnn.state_dict(), "./weights/abide/aug2/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-                if 'Coordinate' in args.root_unsupervised:
-                    unsupervised_path = str(args.root_unsupervised).strip("/processed_ROICoordinate")
-                    torch.save(model.gnn.state_dict(), "./weights/aug2/coordinate/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-                else: 
-                    unsupervised_path=str(args.root_unsupervised)
-                    torch.save(model.gnn.state_dict(), "./weights/aug2/roi/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
-                
+            if 'balanced' in args.root_unsupervised:
+                unsupervised_path = str(args.root_unsupervised).strip('/processed/only_cc_balanced')
+                torch.save(model.gnn.state_dict(), "./weights/aug4/roi/joao_balanced" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch)+ '_' + str(args.num_layer) + ".pth")
+            
+            else:
+                unsupervised_path = str(args.root_unsupervised).strip('/processed/only_cc')
+                torch.save(model.gnn.state_dict(), "./weights/aug4/roi/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch)+ '_' + str(args.num_layer) + ".pth")
+              
     plt.plot(np.array(pretrain_loss_list), 'r',label='Pretrain Loss')
     plt.title('Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig("./pretrain_loss/aug2/roi/joao_"+ str(args.aug_mode)+ str(args.aug1)+str(args.aug2)+'_'+str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) +'.png')
+    plt.savefig("./pretrain_loss/aug3/roi/joao_"+ str(args.aug_mode)+ str(args.aug1)+str(args.aug2)+'_'+str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) +'.png')
     
     
 if __name__ == "__main__":

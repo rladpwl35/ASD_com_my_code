@@ -28,11 +28,11 @@ def cycle_index(num, shift):
 
 #grapn CL 모델 
 class graphcl(nn.Module):
-    def __init__(self, gnn):
+    def __init__(self, gnn, emb_dim):
         super(graphcl, self).__init__()
         self.gnn = gnn
         self.pool = global_mean_pool
-        self.projection_head = nn.Sequential(nn.Linear(300, 300), nn.ReLU(inplace=True), nn.Linear(300, 300))
+        self.projection_head = nn.Sequential(nn.Linear(emb_dim, 300), nn.ReLU(inplace=True), nn.Linear(300, 300))
 
     def forward_cl(self, x, edge_index, edge_attr, batch):
         x = self.gnn(x, edge_index, edge_attr)
@@ -192,7 +192,7 @@ def main():
 
     #set up model
     gnn = GNN(args.num_layer, args.emb_dim, JK = args.JK, drop_ratio = args.dropout_ratio, gnn_type = args.gnn_type)
-    model = graphcl(gnn)
+    model = graphcl(gnn, args.emb_dim)
     model.to(device)
 
     #set up optimizer
@@ -220,10 +220,13 @@ def main():
                 if 'Coordinate' in args.root_unsupervised:
                     unsupervised_path = str(args.root_unsupervised).strip("/processed_ROICoordinate")
                     torch.save(model.gnn.state_dict(), "./weights/aug3/coordinate/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
+                if 'balanced' in args.root_unsupervised:
+                    unsupervised_path = str(args.root_unsupervised).strip('/processed/only_cc_balanced')
+                    torch.save(model.gnn.state_dict(), "./weights/aug3/roi/joao_balanced" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch)+ '_' + str(args.num_layer) + ".pth")
+            
                 else:
-                    #unsupervised_path = str(args.root_unsupervised).strip("/abide/")
-                    unsupervised_path=str(args.root_unsupervised)
-                    torch.save(model.gnn.state_dict(), "./weights/aug3/roi/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch) + ".pth")
+                    unsupervised_path = str(args.root_unsupervised).strip('/processed/only_cc')
+                    torch.save(model.gnn.state_dict(), "./weights/aug3/roi/joao_" + str(args.gamma) + '_' + str(args.gnn_type) + '_' + 'batch' + str(args.batch_size) + '_' + unsupervised_path + '_' + str(epoch)+ '_' + str(args.num_layer) + ".pth")
             if args.aug_mode == 'none':
                 if 'abide' in args.root_unsupervised:
                     unsupervised_path = str(args.root_unsupervised).strip("/abide/")
